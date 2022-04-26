@@ -30,7 +30,14 @@
                             <outlet property="delegate" destination="9Pz-7y-tOT" id="klr-1h-XFT"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="L1m-ZP-AV8"/>
+                    <navigationItem key="navigationItem" id="L1m-ZP-AV8">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="QyX-ut-TzH">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="9Pz-7y-tOT" id="Fcp-lF-p3r"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jOQ-ZL-a1r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -44,7 +51,14 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="5oh-RU-qOd">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.67847949269999996" green="0.80770492549999995" blue="0.84173530340000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="barTintColor" red="0.67847949269999996" green="0.80770492549999995" blue="0.84173530340000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" red="0.67847949269999996" green="0.80770492549999995" blue="0.84173530340000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </navigationBarAppearance>
+                        <navigationBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" red="0.67847949269999996" green="0.80770492549999995" blue="0.84173530340000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </navigationBarAppearance>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
