@@ -6,16 +6,19 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
 
-    var itemArray: [String] = []
+    var itemArray = [Item]()
+    let contex = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "ToDoList"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.orange]
+        loadItems()
     }
 
     //MARK: - DataSource
@@ -25,9 +28,11 @@ class ToDoListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        let item = itemArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+
+        cell.textLabel?.text = item.title
+        cell.accessoryType = item.done ? .checkmark : .none
         return cell
     }
 
@@ -35,12 +40,9 @@ class ToDoListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-
+        itemArray.remove(at: indexPath.row)
+//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
@@ -49,15 +51,15 @@ class ToDoListViewController: UITableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
 
         var textField = UITextField()
-
         let alert = UIAlertController(title: "Add New ToDo Item", message: "", preferredStyle: .alert)
-
         let action = UIAlertAction(title: "Add Item", style: .default) { action in
 
-            if let newItem = textField.text {
-                self.itemArray.append(newItem)
-                self.tableView.reloadData()
-            }
+            let newItem = Item(context: self.contex)
+            newItem.title = textField.text
+            newItem.done = false
+            self.itemArray.append(newItem)
+            self.saveItems()
+
         }
 
         alert.addTextField { alertTextField in
@@ -66,6 +68,24 @@ class ToDoListViewController: UITableViewController {
         }
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+
+    func saveItems() {
+        do {
+            try contex.save()
+        } catch {
+            print("Error saving \(error)")
+        }
+        self.tableView.reloadData()
+    }
+
+    func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try contex.fetch(request)
+        } catch {
+            print("Error loading \(error)")
+        }
     }
 }
 
