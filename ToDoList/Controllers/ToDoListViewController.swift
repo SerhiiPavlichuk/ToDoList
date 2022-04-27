@@ -85,6 +85,7 @@ class ToDoListViewController: UITableViewController {
 
         do {
             itemArray = try contex.fetch(request)
+            tableView.reloadData()
         } catch {
             print("Error loading \(error)")
         }
@@ -98,6 +99,15 @@ extension ToDoListViewController: UISearchBarDelegate {
         request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         loadItems(with: request)
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
     }
 }
 
