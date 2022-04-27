@@ -18,6 +18,7 @@ class ToDoListViewController: UITableViewController {
 
         title = "ToDoList"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.orange]
+
         loadItems()
     }
 
@@ -40,8 +41,9 @@ class ToDoListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        itemArray.remove(at: indexPath.row)
-//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+//        contex.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -79,8 +81,8 @@ class ToDoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
 
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+
         do {
             itemArray = try contex.fetch(request)
         } catch {
@@ -89,4 +91,13 @@ class ToDoListViewController: UITableViewController {
     }
 }
 
+extension ToDoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        loadItems(with: request)
+    }
+}
 
