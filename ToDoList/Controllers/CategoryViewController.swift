@@ -19,6 +19,8 @@ class CategoryViewController: UITableViewController {
         loadCategories()
     }
 
+    //MARK: - DataSource
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         categoryArray.count
     }
@@ -30,10 +32,22 @@ class CategoryViewController: UITableViewController {
         return cell
     }
 
+    //MARK: - Delegate
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "goToItems", sender: self)
 
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destionationVC = segue.destination as? ToDoListViewController {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                destionationVC.selectedCategory = categoryArray[indexPath.row]
+            }
+        }
+    }
+
+    //MARK: - Action
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
@@ -52,6 +66,8 @@ class CategoryViewController: UITableViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+
+    //MARK: - Methods
 
     func saveCategories() {
         do {
