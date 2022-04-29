@@ -47,11 +47,19 @@ class ToDoListViewController: UITableViewController {
 
     //MARK: - Delegate
 
-    //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //        items[indexPath.row].done = !itemArray[indexPath.row].done
-    ////        saveItems()
-    //        tableView.deselectRow(at: indexPath, animated: true)
-    //    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let item = items?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("Error saving done status \(error)")
+            }
+        }
+        tableView.reloadData()
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
     //MARK: - Action
 
@@ -88,15 +96,6 @@ class ToDoListViewController: UITableViewController {
     }
 
     //MARK: - Methods
-
-    //    func saveItems() {
-    //        do {
-    //            try contex.save()
-    //        } catch {
-    //            print("Error saving \(error)")
-    //        }
-    //        self.tableView.reloadData()
-    //    }
 
     func loadItems() {
         items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
